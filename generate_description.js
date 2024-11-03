@@ -40,7 +40,7 @@ async function generateDescriptions() {
       continue;
     }
 
-    const imageUrl = `https://hauke.trumpf.github.io/birdwatch/images/${imageFile}`;
+    const imageUrl = `https://hauketrumpf.github.io/birdwatch/images/${imageFile}`;
 
     try {
       const response = await openai.chat.completions.create({
