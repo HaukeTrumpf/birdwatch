@@ -1,4 +1,3 @@
-# .github/workflows/deploy.yml
 name: Deploy Vite React App to GitHub Pages
 
 on:
@@ -33,7 +32,7 @@ jobs:
       - name: Copy images to public directory
         run: mkdir -p public/images && cp -r src/assets/images/* public/images/
 
-      - name: List files in public/images
+      - name: List files in public/images after copying
         run: ls -la public/images
 
       - name: Generate image descriptions
@@ -43,6 +42,9 @@ jobs:
 
       - name: Build Vite project
         run: npm run build
+
+      - name: List files in dist directory after build
+        run: ls -la dist/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
