@@ -24,10 +24,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Print working directory
+        run: pwd
+
+      - name: List files in working directory
+        run: ls -la
+
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'  # Passen Sie die Node-Version an Ihre Version an
+          node-version: '16'  # Passen Sie die Node-Version an
 
       - name: Install dependencies
         run: npm install
