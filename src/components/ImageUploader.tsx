@@ -2,30 +2,36 @@
 import React, { useEffect, useState } from 'react';
 
 const ImageUploader: React.FC = () => {
-  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+  const [imagesWithDescriptions, setImagesWithDescriptions] = useState<{ url: string, description: string }[]>([]);
 
   useEffect(() => {
-    // Import all images from src/assets using Vite's import.meta.glob
-    const importAllImages = () => {
-      const images = import.meta.glob('../assets/*.{jpg,jpeg,png}', { eager: true });
-      const imageUrls = Object.values(images).map((module: any) => module.default);
+    // Import all images and corresponding text files from src/assets
+    const loadImagesAndDescriptions = () => {
+      const images = import.meta.glob<{ default: string }>('../assets/*.{jpg,jpeg,png}', { eager: true });
+      const descriptions = import.meta.glob<{ default: string }>('../assets/*.txt', { eager: true });
 
-      setUploadedImages(imageUrls);
+      // Map each image to its corresponding description file
+      const imageData = Object.keys(images).map((imagePath) => {
+        const descriptionPath = imagePath.replace(/\.(jpg|jpeg|png)$/i, '.txt');
+        const description = descriptions[descriptionPath]?.default || 'No description available.';
+        
+        return { url: images[imagePath].default, description };
+      });
+
+      setImagesWithDescriptions(imageData);
     };
 
-    importAllImages();
+    loadImagesAndDescriptions();
   }, []);
 
   return (
     <div className="container mx-auto p-4">
       <div className="grid grid-cols-3 gap-4">
-        {uploadedImages.map((url, index) => (
-          <img
-            key={index}
-            src={url}
-            alt={`Captured bird ${index}`}
-            className="w-full h-auto rounded-lg shadow"
-          />
+        {imagesWithDescriptions.map((item, index) => (
+          <div key={index} className="image-container">
+            <img src={item.url} alt={`Captured bird ${index}`} className="w-full h-auto rounded-lg shadow" />
+            <p className="mt-2 text-gray-700">{item.description}</p>
+          </div>
         ))}
       </div>
     </div>
