@@ -15,8 +15,15 @@ const openai = new OpenAI({
 async function generateDescriptions() {
   const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
-  const imagesDir = path.join(__dirname, 'public', 'images');
+  // Pfad zu assets/images statt public/images
+  const imagesDir = path.join(__dirname, 'src', 'assets', 'images');
   const publicDir = path.join(__dirname, 'public');
+
+  // Überprüfen, ob das Verzeichnis existiert
+  if (!fs.existsSync(imagesDir)) {
+    console.error(`Bilderverzeichnis nicht gefunden: ${imagesDir}`);
+    process.exit(1);
+  }
 
   // Alle Bilddateien im Verzeichnis abrufen
   const imageFiles = fs
@@ -24,7 +31,7 @@ async function generateDescriptions() {
     .filter((file) => /\.(jpg|jpeg|png)$/i.test(file));
 
   // Bildpfade erstellen
-  const imagePaths = imageFiles.map((file) => `images/${file}`);
+  const imagePaths = imageFiles.map((file) => `assets/images/${file}`);
 
   let descriptions = {};
 
@@ -40,17 +47,17 @@ async function generateDescriptions() {
       continue;
     }
 
-    const imageUrl = `https://hauketrumpf.github.io/birdwatch/images/${imageFile}`;
+    const imageUrl = `https://hauketrumpf.github.io/birdwatch/assets/images/${imageFile}`;
 
     try {
 
       const response = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
+        model: "gpt-4-vision",
         messages: [
           {
             role: "user",
             content: [
-              { type: "text", text: "welche farbe siehst du" },
+              { type: "text", text: "Welche Farbe siehst du?" },
               {
                 type: "image_url",
                 image_url: {
