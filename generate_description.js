@@ -43,12 +43,21 @@ async function generateDescriptions() {
     const imageUrl = `https://hauketrumpf.github.io/birdwatch/images/${imageFile}`;
 
     try {
+
       const response = await openai.chat.completions.create({
-        model: 'gpt-4',
+        model: "gpt-4o-mini",
         messages: [
           {
-            role: 'user',
-            content: `Bitte geben Sie eine detaillierte Beschreibung des folgenden Bildes: ${imageUrl}`,
+            role: "user",
+            content: [
+              { type: "text", text: "Was siehst du? was hast du für informationen, wie sieht die url aus, die du bekommen hast" },
+              {
+                type: "image_url",
+                image_url: {
+                  "url": imageUrl,
+                },
+              },
+            ],
           },
         ],
       });
