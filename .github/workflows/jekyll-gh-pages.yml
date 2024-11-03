@@ -1,0 +1,95 @@
+name: Deploy Vite React App to GitHub Pages
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - 'src/assets/*.{jpg,jpeg,png}'  # Trigger on image uploads only
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build-and-describe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install Dependencies
+        run: npm install axios
+
+      - name: Generate Descriptions with OpenAI
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          node << 'EOF'
+          const fs = require('fs');
+          const path = require('path');
+          const axios = require('axios');
+
+          const assetsDir = path.join(__dirname, 'src/assets');
+          const apiKey = process.env.OPENAI_API_KEY;
+
+          // Read all image files in src/assets
+          fs.readdir(assetsDir, async (err, files) => {
+            if (err) throw err;
+
+            for (const file of files) {
+              if (/\.(jpg|jpeg|png)$/i.test(file)) {
+                const imagePath = path.join(assetsDir, file);
+
+                // Send each image to OpenAI for interpretation
+                const descriptionFilePath = path.join(assetsDir, `${path.parse(file).name}.txt`);
+                
+                if (!fs.existsSync(descriptionFilePath)) { // Avoid overwriting existing descriptions
+                  const imageContent = fs.readFileSync(imagePath, { encoding: 'base64' });
+                  
+                  try {
+                    const response = await axios.post(
+                      'https://api.openai.com/v1/images:interpret', // Hypothetical endpoint; adjust as necessary
+                      { image: imageContent },
+                      { headers: { Authorization: `Bearer ${apiKey}` } }
+                    );
+
+                    const description = response.data.description;
+                    fs.writeFileSync(descriptionFilePath, description);
+                  } catch (error) {
+                    console.error(`Failed to interpret image ${file}:`, error.message);
+                  }
+                }
+              }
+            }
+          });
+          EOF
+
+      - name: Build Vite project
+        run: npm run build
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist  # Vite output directory
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build-and-describe
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
