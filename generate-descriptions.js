@@ -9,7 +9,7 @@ const openai = new OpenAI({
 async function main() {
   try {
     const response = await openai.chat.completions.create({
-      model: 'gpt-4', // Use 'gpt-4' if you have access
+      model: 'gpt-4o-mini', // Use 'gpt-4' if you have access
       messages: [
         {
           role: 'user',
