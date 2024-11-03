@@ -50,7 +50,7 @@ const ImageUploader: React.FC = () => {
                 console.error('Image failed to load:', item.url);
               }}
             />
-            <p className="mt-2 text-gray-700 whitespace-pre-wrap">{item.description}</p>
+            <p className="mt-2 text-white whitespace-pre-wrap">{item.description}</p>
           </div>
         ))}
       </div>
