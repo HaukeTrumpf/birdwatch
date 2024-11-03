@@ -3,7 +3,6 @@ const fs = require('fs');
 const path = require('path');
 const OpenAI = require('openai');
 
-// Überprüfen, ob der API-Schlüssel vorhanden ist
 if (!process.env.OPENAI_API_KEY) {
   console.error('Fehler: OPENAI_API_KEY ist nicht gesetzt.');
   process.exit(1);
@@ -18,16 +17,23 @@ async function generateDescriptions() {
   const publicDir = path.join(__dirname, 'public');
 
   // Alle Bilddateien im Verzeichnis abrufen
-  const imageFiles = fs.readdirSync(imagesDir).filter((file) => /\.(jpg|jpeg|png)$/i.test(file));
+  const imageFiles = fs
+    .readdirSync(imagesDir)
+    .filter((file) => /\.(jpg|jpeg|png)$/i.test(file));
 
   // Bildpfade erstellen
   const imagePaths = imageFiles.map((file) => `images/${file}`);
 
-  for (const imageFile of imageFiles) {
-    const descriptionFile = path.join(imagesDir, `${imageFile}.txt`);
+  let descriptions = {};
 
-    // Überspringen, wenn die Beschreibung bereits existiert
-    if (fs.existsSync(descriptionFile)) {
+  const descriptionsPath = path.join(publicDir, 'descriptions.json');
+
+  if (fs.existsSync(descriptionsPath)) {
+    descriptions = JSON.parse(fs.readFileSync(descriptionsPath, 'utf8'));
+  }
+
+  for (const imageFile of imageFiles) {
+    if (descriptions[imageFile]) {
       console.log(`Beschreibung für ${imageFile} existiert bereits. Überspringe...`);
       continue;
     }
@@ -47,17 +53,15 @@ async function generateDescriptions() {
 
       const description = response.choices[0].message.content.trim();
 
-      fs.writeFileSync(descriptionFile, description);
+      descriptions[imageFile] = description;
       console.log(`Beschreibung für ${imageFile} gespeichert.`);
     } catch (error) {
       console.error(`Fehler bei ${imageFile}:`, error.response?.data || error.message);
     }
   }
 
-  // images.json im public-Verzeichnis speichern
-  const imagesJsonPath = path.join(publicDir, 'images.json');
-  fs.writeFileSync(imagesJsonPath, JSON.stringify(imagePaths));
-  console.log('images.json erstellt.');
+  fs.writeFileSync(descriptionsPath, JSON.stringify(descriptions, null, 2));
+  console.log('descriptions.json erstellt.');
 }
 
 generateDescriptions();

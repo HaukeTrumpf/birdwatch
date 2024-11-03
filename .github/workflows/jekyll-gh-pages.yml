@@ -27,7 +27,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16' # or the version you are using
+          node-version: '16'  # Passen Sie die Node-Version an Ihre Version an
 
       - name: Install dependencies
         run: npm install
@@ -43,7 +43,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist  # Vite output directory
+          path: ./dist  # Vite Output-Verzeichnis
 
   deploy:
     environment:
