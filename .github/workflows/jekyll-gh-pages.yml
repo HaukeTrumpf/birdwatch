@@ -1,6 +1,4 @@
 # .github/workflows/deploy.yml
-# Deploy a Vite React project to GitHub Pages and generate image descriptions
-
 name: Deploy Vite React App to GitHub Pages
 
 on:
@@ -24,16 +22,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Print working directory
-        run: pwd
-
-      - name: List files in working directory
-        run: ls -la
-
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'  # Passen Sie die Node-Version an
+          node-version: '16'  # Oder '18'
 
       - name: Install dependencies
         run: npm install
@@ -41,7 +33,7 @@ jobs:
       - name: Generate image descriptions
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: node generate_description.js
+        run: node generate_description.js  # Passen Sie den Dateinamen an
 
       - name: Build Vite project
         run: npm run build

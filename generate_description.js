@@ -1,7 +1,7 @@
-// generate_descriptions.js
-const fs = require('fs');
-const path = require('path');
-const OpenAI = require('openai');
+// generate_description.js
+import fs from 'fs';
+import path from 'path';
+import OpenAI from 'openai';
 
 if (!process.env.OPENAI_API_KEY) {
   console.error('Fehler: OPENAI_API_KEY ist nicht gesetzt.');
@@ -13,6 +13,8 @@ const openai = new OpenAI({
 });
 
 async function generateDescriptions() {
+  const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
   const imagesDir = path.join(__dirname, 'public', 'images');
   const publicDir = path.join(__dirname, 'public');
 
@@ -38,7 +40,7 @@ async function generateDescriptions() {
       continue;
     }
 
-    const imageUrl = `https://hauke.trumpf.github.io/birdwatch/images/${imageFile}`;
+    const imageUrl = `https://<YOUR_GITHUB_USERNAME>.github.io/<REPOSITORY_NAME>/images/${imageFile}`;
 
     try {
       const response = await openai.chat.completions.create({
@@ -62,6 +64,11 @@ async function generateDescriptions() {
 
   fs.writeFileSync(descriptionsPath, JSON.stringify(descriptions, null, 2));
   console.log('descriptions.json erstellt.');
+
+  // images.json im public-Verzeichnis speichern
+  const imagesJsonPath = path.join(publicDir, 'images.json');
+  fs.writeFileSync(imagesJsonPath, JSON.stringify(imagePaths, null, 2));
+  console.log('images.json erstellt.');
 }
 
 generateDescriptions();
