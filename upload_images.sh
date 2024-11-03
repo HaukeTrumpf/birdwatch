@@ -1,20 +1,18 @@
 #!/bin/bash
 
-# Set up variables
+# Define the image and repository directories
 IMAGE_DIR="/mnt/ssd/images"
-REPO_DIR="/home/pi/birdwatch"
-   
-# Move to the GitHub repository directory
-cd $REPO_DIR
+REPO_DIR="$(pwd)"  # Use the current directory as the repo directory
 
-# Copy new images from the Pi's image directory to the GitHub repository's images folder
-cp $IMAGE_DIR/*.jpg $REPO_DIR/src/assets
 
-# Add and commit new images
-git add images/*.jpg
+# Copy new images to the GitHub repository's src/assets folder
+cp $IMAGE_DIR/*.jpg $REPO_DIR/src/assets/
+
+# Add, commit, and push new images to GitHub
+git add src/assets/*.jpg
 git commit -m "Add new images - $(date)"
-git push origin main
+git push https://HaukeTrumpf:${GITHUB_TOKEN}@github.com/HaukeTrumpf/birdwatch.git
 
-# Run npm deploy to publish changes to GitHub Pages
-npm install # To make sure dependencies are up-to-date
+# Deploy the changes using npm
+npm install
 npm run deploy
