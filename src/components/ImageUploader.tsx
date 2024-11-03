@@ -1,31 +1,58 @@
 import React, { useEffect, useState } from 'react';
 
+interface ImageData {
+  url: string;
+  descriptionUrl: string;
+  description: string;
+}
+
 const ImageUploader: React.FC = () => {
-  const [imagesWithDescriptions, setImagesWithDescriptions] = useState<{ url: string, description: string }[]>([]);
+  const [imagesWithDescriptions, setImagesWithDescriptions] = useState<ImageData[]>([]);
 
   useEffect(() => {
-    const loadImagesAndDescriptions = () => {
-      // Use absolute paths starting from the root
-      const images = import.meta.glob<{ default: string }>('/src/assets/*.{jpg,jpeg,png}', { eager: true });
-      const descriptions = import.meta.glob<{ default: string }>('/src/assets/*.txt', { eager: true });
+    const loadImagesAndDescriptions = async () => {
+      try {
+        // Fetch the images.json file to get the list of image filenames
+        const response = await fetch('/birdwatch/images.json');
+        const imageFilenames: string[] = await response.json();
 
-      // Map each image to its corresponding description file
-      const imageData = Object.keys(images).map((imagePath) => {
-        // Get the base filename (without path)
-        const filename = imagePath.split('/').pop() || '';
-        const descriptionFilename = filename.replace(/\.(jpg|jpeg|png)$/i, '.txt');
-        const descriptionPath = `/src/assets/${descriptionFilename}`;
+        const imageData: ImageData[] = imageFilenames.map((filename) => {
+          const url = `/birdwatch/${filename}`;
+          const descriptionUrl = `/birdwatch/${filename}.txt`;
+          return { url, descriptionUrl, description: '' };
+        });
 
-        const description = descriptions[descriptionPath]?.default || 'No description available.';
-        
-        return { url: images[imagePath].default, description };
-      });
+        // Load descriptions
+        const dataWithDescriptions = await Promise.all(
+          imageData.map(async (item) => {
+            try {
+              const response = await fetch(item.descriptionUrl);
+              if (response.ok) {
+                const description = await response.text();
+                return { ...item, description };
+              } else {
+                return { ...item, description: 'Keine Beschreibung verfügbar.' };
+              }
+            } catch (error) {
+              console.error(`Fehler beim Laden der Beschreibung für ${item.url}:`, error);
+              return { ...item, description: 'Fehler beim Laden der Beschreibung.' };
+            }
+          })
+        );
 
-      setImagesWithDescriptions(imageData);
+        setImagesWithDescriptions(dataWithDescriptions);
+      } catch (error) {
+        console.error('Fehler beim Laden der Bilder:', error);
+      }
     };
 
     loadImagesAndDescriptions();
   }, []);
+
+  const handleRegenerateDescription = async (image: ImageData) => {
+    // Da wir den API-Schlüssel nicht im Client-Code verwenden können, können wir hier einen manuellen Workflow auslösen
+    alert('Die Neugenerierung der Beschreibung ist nicht direkt verfügbar.');
+  };
 
   return (
     <div className="container mx-auto p-4">
@@ -34,6 +61,12 @@ const ImageUploader: React.FC = () => {
           <div key={index} className="image-container">
             <img src={item.url} alt={`Captured bird ${index}`} className="w-full h-auto rounded-lg shadow" />
             <p className="mt-2 text-gray-700 whitespace-pre-wrap">{item.description}</p>
+            <button
+              onClick={() => handleRegenerateDescription(item)}
+              className="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
+            >
+              Beschreibung neu generieren
+            </button>
           </div>
         ))}
       </div>

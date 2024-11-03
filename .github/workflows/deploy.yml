@@ -1,10 +1,17 @@
-# Deploy a Vite React project to GitHub Pages
+# .github/workflows/deploy.yml
+# Deploy a Vite React project to GitHub Pages and generate image descriptions
+
 name: Deploy Vite React App to GitHub Pages
 
 on:
   push:
     branches: ["main"]
   workflow_dispatch:
+    inputs:
+      regenerate_descriptions:
+        description: 'Regenerate image descriptions'
+        required: false
+        default: 'false'
 
 permissions:
   contents: read
@@ -20,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -30,11 +37,17 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Generate image descriptions
+        if: ${{ github.event.inputs.regenerate_descriptions == 'true' || github.event_name != 'workflow_dispatch' }}
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: node generate_descriptions.js
+
       - name: Build Vite project
         run: npm run build
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v1
         with:
           path: ./dist  # Vite output directory
 
@@ -47,4 +60,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v1
