@@ -1,0 +1,98 @@
+Setting up watches.
+Watches established.
+Setting up watches.
+Watches established.
+New image detected: GEILOOOOO.jpg. Uploading to GitHub...
+New image detected: GEILOOOOO.jpg. Uploading to GitHub...
+bash: /home/pi/birdwatch/upload_images.sh: No such file or directory
+New image detected: GEILOOOOO.jpg. Uploading to GitHub...
+bash: /home/pi/birdwatch/upload_images.sh: No such file or directory
+hint: Pulling without specifying how to reconcile divergent branches is
+hint: discouraged. You can squelch this message by running one of the following
+hint: commands sometime before your next pull:
+hint: 
+hint:   git config pull.rebase false  # merge (the default strategy)
+hint:   git config pull.rebase true   # rebase
+hint:   git config pull.ff only       # fast-forward only
+hint: 
+hint: You can replace "git config" with "git config --global" to set a default
+hint: preference for all repositories. You can also pass --rebase, --no-rebase,
+hint: or --ff-only on the command line to override the configured default per
+hint: invocation.
+From https://github.com/HaukeTrumpf/birdwatch
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+[main b83564e] Add new images - Sun  3 Nov 14:28:01 CET 2024
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 src/assets/GEILOOOOO.jpg
+To https://github.com/HaukeTrumpf/birdwatch.git
+   d51d25c..b83564e  main -> main
+
+> birdwatch@0.0.0 predeploy
+> npm run build
+
+
+> birdwatch@0.0.0 build
+> tsc -b && vite build
+
+vite v5.4.10 building for production...
+transforming...
+✓ 36 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.49 kB │ gzip:  0.31 kB
+dist/assets/index-CRazWPdq.css    7.01 kB │ gzip:  2.19 kB
+dist/assets/index-CuXbJ3Wu.js   146.00 kB │ gzip: 46.42 kB
+✓ built in 11.80s
+
+> birdwatch@0.0.0 deploy
+> gh-pages -d dist
+
+Published
+New image detected: GEILOOOOO.jpg. Uploading to GitHub...
+hint: Pulling without specifying how to reconcile divergent branches is
+hint: discouraged. You can squelch this message by running one of the following
+hint: commands sometime before your next pull:
+hint: 
+hint:   git config pull.rebase false  # merge (the default strategy)
+hint:   git config pull.rebase true   # rebase
+hint:   git config pull.ff only       # fast-forward only
+hint: 
+hint: You can replace "git config" with "git config --global" to set a default
+hint: preference for all repositories. You can also pass --rebase, --no-rebase,
+hint: or --ff-only on the command line to override the configured default per
+hint: invocation.
+From https://github.com/HaukeTrumpf/birdwatch
+ * branch            main       -> FETCH_HEAD
+   d51d25c..b83564e  main       -> origin/main
+Already up to date.
+On branch main
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	nohup.out
+	watch_images.sh
+
+nothing added to commit but untracked files present (use "git add" to track)
+Everything up-to-date
+
+> birdwatch@0.0.0 predeploy
+> npm run build
+
+
+> birdwatch@0.0.0 build
+> tsc -b && vite build
+
+vite v5.4.10 building for production...
+transforming...
+✓ 36 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.49 kB │ gzip:  0.31 kB
+dist/assets/index-CRazWPdq.css    7.01 kB │ gzip:  2.19 kB
+dist/assets/index-CuXbJ3Wu.js   146.00 kB │ gzip: 46.42 kB
+✓ built in 13.54s
+
+> birdwatch@0.0.0 deploy
+> gh-pages -d dist
+
+Published
