@@ -3,27 +3,36 @@ const fs = require('fs');
 const path = require('path');
 const OpenAI = require('openai');
 
+// Überprüfen, ob der API-Schlüssel vorhanden ist
+if (!process.env.OPENAI_API_KEY) {
+  console.error('Fehler: OPENAI_API_KEY ist nicht gesetzt.');
+  process.exit(1);
+}
+
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
 async function generateDescriptions() {
   const imagesDir = path.join(__dirname, 'public', 'images');
-  const descriptionsDir = imagesDir; // Save descriptions in the same folder
+  const publicDir = path.join(__dirname, 'public');
 
-  // Get all image files in the directory
+  // Alle Bilddateien im Verzeichnis abrufen
   const imageFiles = fs.readdirSync(imagesDir).filter((file) => /\.(jpg|jpeg|png)$/i.test(file));
 
-  for (const imageFile of imageFiles) {
-    const descriptionFile = path.join(descriptionsDir, `${imageFile}.txt`);
+  // Bildpfade erstellen
+  const imagePaths = imageFiles.map((file) => `images/${file}`);
 
-    // Skip if description already exists
+  for (const imageFile of imageFiles) {
+    const descriptionFile = path.join(imagesDir, `${imageFile}.txt`);
+
+    // Überspringen, wenn die Beschreibung bereits existiert
     if (fs.existsSync(descriptionFile)) {
       console.log(`Beschreibung für ${imageFile} existiert bereits. Überspringe...`);
       continue;
     }
 
-    const imageUrl = `https://hauke.trumpf.github.io/birdwatch/${imageFile}`;
+    const imageUrl = `https://hauke.trumpf.github.io/birdwatch/images/${imageFile}`;
 
     try {
       const response = await openai.chat.completions.create({
@@ -45,9 +54,9 @@ async function generateDescriptions() {
     }
   }
 
-  // Generate images.json file
-  const imagesJsonPath = path.join(imagesDir, 'images.json');
-  fs.writeFileSync(imagesJsonPath, JSON.stringify(imageFiles));
+  // images.json im public-Verzeichnis speichern
+  const imagesJsonPath = path.join(publicDir, 'images.json');
+  fs.writeFileSync(imagesJsonPath, JSON.stringify(imagePaths));
   console.log('images.json erstellt.');
 }
 

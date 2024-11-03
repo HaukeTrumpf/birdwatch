@@ -12,13 +12,24 @@ const ImageUploader: React.FC = () => {
   useEffect(() => {
     const loadImagesAndDescriptions = async () => {
       try {
+        const baseUrl = import.meta.env.BASE_URL;
+        console.log('Base URL:', baseUrl);
+
         // Fetch the images.json file to get the list of image filenames
-        const response = await fetch('/birdwatch/images.json');
+        const imagesJsonUrl = `${baseUrl}images.json`;
+        console.log('Fetching images.json from:', imagesJsonUrl);
+
+        const response = await fetch(imagesJsonUrl);
+        if (!response.ok) {
+          console.error('Failed to fetch images.json:', response.statusText);
+          return;
+        }
         const imageFilenames: string[] = await response.json();
+        console.log('Image filenames:', imageFilenames);
 
         const imageData: ImageData[] = imageFilenames.map((filename) => {
-          const url = `/birdwatch/${filename}`;
-          const descriptionUrl = `/birdwatch/${filename}.txt`;
+          const url = `${baseUrl}${filename}`;
+          const descriptionUrl = `${url}.txt`;
           return { url, descriptionUrl, description: '' };
         });
 
@@ -49,11 +60,6 @@ const ImageUploader: React.FC = () => {
     loadImagesAndDescriptions();
   }, []);
 
-  const handleRegenerateDescription = async () => {
-    // Da wir den API-Schlüssel nicht im Client-Code verwenden können, können wir hier einen manuellen Workflow auslösen
-    alert('Die Neugenerierung der Beschreibung ist nicht direkt verfügbar.');
-  };
-
   return (
     <div className="container mx-auto p-4">
       <div className="grid grid-cols-3 gap-4">
@@ -61,16 +67,10 @@ const ImageUploader: React.FC = () => {
           <div key={index} className="image-container">
             <img
               src={item.url}
-              alt={`Captured bird ${index}`}
+              alt={`Image ${index}`}
               className="w-full h-auto rounded-lg shadow"
             />
             <p className="mt-2 text-gray-700 whitespace-pre-wrap">{item.description}</p>
-            <button
-              onClick={handleRegenerateDescription}
-              className="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
-            >
-              Beschreibung neu generieren
-            </button>
           </div>
         ))}
       </div>
