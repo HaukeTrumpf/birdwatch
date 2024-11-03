@@ -25,15 +25,21 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'  # Oder '18'
+          node-version: '16'
 
       - name: Install dependencies
         run: npm install
 
+      - name: Copy images to public directory
+        run: mkdir -p public/images && cp -r src/assets/images/* public/images/
+
+      - name: List files in public/images
+        run: ls -la public/images
+
       - name: Generate image descriptions
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: node generate_description.js  # Passen Sie den Dateinamen an
+        run: node generate_description.js
 
       - name: Build Vite project
         run: npm run build
@@ -41,7 +47,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist  # Vite Output-Verzeichnis
+          path: ./dist
 
   deploy:
     environment:
