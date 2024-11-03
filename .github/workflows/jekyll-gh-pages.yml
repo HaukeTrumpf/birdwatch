@@ -1,10 +1,9 @@
+# Deploy a Vite React project to GitHub Pages
 name: Deploy Vite React App to GitHub Pages
 
 on:
   push:
     branches: ["main"]
-    paths:
-      - 'src/assets/*.{jpg,jpeg,png}'  # Trigger on image uploads only
   workflow_dispatch:
 
 permissions:
@@ -17,7 +16,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build-and-describe:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -26,69 +25,10 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: '16' # or the version you are using
 
-      - name: Install Dependencies
-        run: npm install axios form-data
-
-      - name: Generate Descriptions with OpenAI
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: |
-          node << 'EOF'
-          const fs = require('fs');
-          const path = require('path');
-          const axios = require('axios');
-          const FormData = require('form-data');
-
-          (async () => {
-            const assetsDir = path.join(__dirname, 'src/assets');
-            const apiKey = process.env.OPENAI_API_KEY;
-
-            const files = fs.readdirSync(assetsDir);
-
-            for (const file of files) {
-              if (/\.(jpg|jpeg|png)$/i.test(file)) {
-                const imagePath = path.join(assetsDir, file);
-                const descriptionFilePath = path.join(assetsDir, \`\${path.parse(file).name}.txt\`);
-
-                if (!fs.existsSync(descriptionFilePath)) {
-                  try {
-                    const imageData = fs.readFileSync(imagePath);
-
-                    const formData = new FormData();
-                    formData.append('image', imageData, file);
-
-                    const response = await axios.post(
-                      'https://api.openai.com/v1/chat/completions',
-                      {
-                        model: 'gpt-4',
-                        messages: [
-                          {
-                            role: 'user',
-                            content: 'Describe the image in detail.',
-                          },
-                        ],
-                        // Note: The image is sent as a file in the request
-                      },
-                      {
-                        headers: {
-                          'Authorization': \`Bearer \${apiKey}\`,
-                          'Content-Type': 'application/json',
-                        },
-                      }
-                    );
-
-                    const description = response.data.choices[0].message.content.trim();
-                    fs.writeFileSync(descriptionFilePath, description);
-                  } catch (error) {
-                    console.error(\`Failed to interpret image \${file}:\`, error.response?.data || error.message);
-                  }
-                }
-              }
-            }
-          })();
-          EOF
+      - name: Install dependencies
+        run: npm install
 
       - name: Build Vite project
         run: npm run build
@@ -103,7 +43,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    needs: build-and-describe
+    needs: build
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
