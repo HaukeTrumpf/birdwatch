@@ -50,7 +50,7 @@ async function generateDescriptions() {
           {
             role: "user",
             content: [
-              { type: "text", text: "Was siehst du? was hast du für informationen, wie sieht die url aus, die du bekommen hast" },
+              { type: "text", text: "welche farbe siehst du" },
               {
                 type: "image_url",
                 image_url: {
