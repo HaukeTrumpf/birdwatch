@@ -96,3 +96,283 @@ dist/assets/index-CuXbJ3Wu.js   146.00 kB │ gzip: 46.42 kB
 > gh-pages -d dist
 
 Published
+New image detected: GEILOOOOO.jpg. Uploading to GitHub...
+New image detected: GEILOOOOO.jpg. Uploading to GitHub...
+hint: Pulling without specifying how to reconcile divergent branches is
+bash: /home/pi/birdwatch/upload_images.sh: No such file or directory
+hint: discouraged. You can squelch this message by running one of the following
+hint: commands sometime before your next pull:
+hint: 
+hint:   git config pull.rebase false  # merge (the default strategy)
+hint:   git config pull.rebase true   # rebase
+hint:   git config pull.ff only       # fast-forward only
+hint: 
+hint: You can replace "git config" with "git config --global" to set a default
+hint: preference for all repositories. You can also pass --rebase, --no-rebase,
+hint: or --ff-only on the command line to override the configured default per
+hint: invocation.
+New image detected: GEILOOOOO.jpg. Uploading to GitHub...
+bash: /home/pi/birdwatch/upload_images.sh: No such file or directory
+From https://github.com/HaukeTrumpf/birdwatch
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+[main 87e82d7] Add new images - Sun  3 Nov 14:31:32 CET 2024
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/HaukeTrumpf/birdwatch.git
+   871e8c6..87e82d7  main -> main
+
+> birdwatch@0.0.0 predeploy
+> npm run build
+
+
+> birdwatch@0.0.0 build
+> tsc -b && vite build
+
+vite v5.4.10 building for production...
+transforming...
+✓ 36 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.49 kB │ gzip:  0.31 kB
+dist/assets/index-CRazWPdq.css    7.01 kB │ gzip:  2.19 kB
+dist/assets/index-Djh1je4r.js   146.33 kB │ gzip: 46.47 kB
+✓ built in 11.49s
+
+> birdwatch@0.0.0 deploy
+> gh-pages -d dist
+
+Published
+New image detected: GEILOOOOO.jpg. Uploading to GitHub...
+hint: Pulling without specifying how to reconcile divergent branches is
+hint: discouraged. You can squelch this message by running one of the following
+hint: commands sometime before your next pull:
+hint: 
+hint:   git config pull.rebase false  # merge (the default strategy)
+hint:   git config pull.rebase true   # rebase
+hint:   git config pull.ff only       # fast-forward only
+hint: 
+hint: You can replace "git config" with "git config --global" to set a default
+hint: preference for all repositories. You can also pass --rebase, --no-rebase,
+hint: or --ff-only on the command line to override the configured default per
+hint: invocation.
+From https://github.com/HaukeTrumpf/birdwatch
+ * branch            main       -> FETCH_HEAD
+   871e8c6..87e82d7  main       -> origin/main
+Already up to date.
+On branch main
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   nohup.out
+
+no changes added to commit (use "git add" and/or "git commit -a")
+Everything up-to-date
+
+> birdwatch@0.0.0 predeploy
+> npm run build
+
+
+> birdwatch@0.0.0 build
+> tsc -b && vite build
+
+vite v5.4.10 building for production...
+transforming...
+✓ 36 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.49 kB │ gzip:  0.31 kB
+dist/assets/index-CRazWPdq.css    7.01 kB │ gzip:  2.19 kB
+dist/assets/index-Djh1je4r.js   146.33 kB │ gzip: 46.47 kB
+✓ built in 13.55s
+
+> birdwatch@0.0.0 deploy
+> gh-pages -d dist
+
+Published
+New image detected: GEILOOOOO.jpg. Uploading to GitHub...
+New image detected: GEILOOOOO.jpg. Uploading to GitHub...
+bash: /home/pi/birdwatch/upload_images.sh: No such file or directory
+New image detected: GEILOOOOO.jpg. Uploading to GitHub...
+bash: /home/pi/birdwatch/upload_images.sh: No such file or directory
+hint: Pulling without specifying how to reconcile divergent branches is
+hint: discouraged. You can squelch this message by running one of the following
+hint: commands sometime before your next pull:
+hint: 
+hint:   git config pull.rebase false  # merge (the default strategy)
+hint:   git config pull.rebase true   # rebase
+hint:   git config pull.ff only       # fast-forward only
+hint: 
+hint: You can replace "git config" with "git config --global" to set a default
+hint: preference for all repositories. You can also pass --rebase, --no-rebase,
+hint: or --ff-only on the command line to override the configured default per
+hint: invocation.
+From https://github.com/HaukeTrumpf/birdwatch
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+[main 0d250c9] Add new images - Sun  3 Nov 14:33:51 CET 2024
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/HaukeTrumpf/birdwatch.git
+   87e82d7..0d250c9  main -> main
+
+> birdwatch@0.0.0 predeploy
+> npm run build
+
+
+> birdwatch@0.0.0 build
+> tsc -b && vite build
+
+vite v5.4.10 building for production...
+transforming...
+✓ 36 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.49 kB │ gzip:  0.31 kB
+dist/assets/index-CRazWPdq.css    7.01 kB │ gzip:  2.19 kB
+dist/assets/index-CM7cwe-e.js   146.33 kB │ gzip: 46.47 kB
+✓ built in 13.48s
+
+> birdwatch@0.0.0 deploy
+> gh-pages -d dist
+
+Published
+New image detected: GEILOOOOO.jpg. Uploading to GitHub...
+hint: Pulling without specifying how to reconcile divergent branches is
+hint: discouraged. You can squelch this message by running one of the following
+hint: commands sometime before your next pull:
+hint: 
+hint:   git config pull.rebase false  # merge (the default strategy)
+hint:   git config pull.rebase true   # rebase
+hint:   git config pull.ff only       # fast-forward only
+hint: 
+hint: You can replace "git config" with "git config --global" to set a default
+hint: preference for all repositories. You can also pass --rebase, --no-rebase,
+hint: or --ff-only on the command line to override the configured default per
+hint: invocation.
+From https://github.com/HaukeTrumpf/birdwatch
+ * branch            main       -> FETCH_HEAD
+   87e82d7..0d250c9  main       -> origin/main
+Already up to date.
+On branch main
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   nohup.out
+
+no changes added to commit (use "git add" and/or "git commit -a")
+Everything up-to-date
+
+> birdwatch@0.0.0 predeploy
+> npm run build
+
+
+> birdwatch@0.0.0 build
+> tsc -b && vite build
+
+vite v5.4.10 building for production...
+transforming...
+✓ 36 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.49 kB │ gzip:  0.31 kB
+dist/assets/index-CRazWPdq.css    7.01 kB │ gzip:  2.19 kB
+dist/assets/index-CM7cwe-e.js   146.33 kB │ gzip: 46.47 kB
+✓ built in 13.55s
+
+> birdwatch@0.0.0 deploy
+> gh-pages -d dist
+
+Published
+New image detected: gut.jpg. Uploading to GitHub...
+New image detected: gut.jpg. Uploading to GitHub...
+bash: /home/pi/birdwatch/upload_images.sh: No such file or directory
+New image detected: gut.jpg. Uploading to GitHub...
+bash: /home/pi/birdwatch/upload_images.sh: No such file or directory
+hint: Pulling without specifying how to reconcile divergent branches is
+hint: discouraged. You can squelch this message by running one of the following
+hint: commands sometime before your next pull:
+hint: 
+hint:   git config pull.rebase false  # merge (the default strategy)
+hint:   git config pull.rebase true   # rebase
+hint:   git config pull.ff only       # fast-forward only
+hint: 
+hint: You can replace "git config" with "git config --global" to set a default
+hint: preference for all repositories. You can also pass --rebase, --no-rebase,
+hint: or --ff-only on the command line to override the configured default per
+hint: invocation.
+From https://github.com/HaukeTrumpf/birdwatch
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+[main e88faa9] Add new images - Sun  3 Nov 14:35:57 CET 2024
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 src/assets/gut.jpg
+To https://github.com/HaukeTrumpf/birdwatch.git
+   0d250c9..e88faa9  main -> main
+
+> birdwatch@0.0.0 predeploy
+> npm run build
+
+
+> birdwatch@0.0.0 build
+> tsc -b && vite build
+
+vite v5.4.10 building for production...
+transforming...
+✓ 37 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.49 kB │ gzip:  0.31 kB
+dist/assets/index-CRazWPdq.css    7.01 kB │ gzip:  2.19 kB
+dist/assets/index-Cfwuoxu5.js   147.19 kB │ gzip: 46.52 kB
+✓ built in 13.58s
+
+> birdwatch@0.0.0 deploy
+> gh-pages -d dist
+
+Published
+New image detected: gut.jpg. Uploading to GitHub...
+hint: Pulling without specifying how to reconcile divergent branches is
+hint: discouraged. You can squelch this message by running one of the following
+hint: commands sometime before your next pull:
+hint: 
+hint:   git config pull.rebase false  # merge (the default strategy)
+hint:   git config pull.rebase true   # rebase
+hint:   git config pull.ff only       # fast-forward only
+hint: 
+hint: You can replace "git config" with "git config --global" to set a default
+hint: preference for all repositories. You can also pass --rebase, --no-rebase,
+hint: or --ff-only on the command line to override the configured default per
+hint: invocation.
+From https://github.com/HaukeTrumpf/birdwatch
+ * branch            main       -> FETCH_HEAD
+   0d250c9..e88faa9  main       -> origin/main
+Already up to date.
+On branch main
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   nohup.out
+
+no changes added to commit (use "git add" and/or "git commit -a")
+Everything up-to-date
+
+> birdwatch@0.0.0 predeploy
+> npm run build
+
+
+> birdwatch@0.0.0 build
+> tsc -b && vite build
+
+vite v5.4.10 building for production...
+transforming...
+✓ 37 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.49 kB │ gzip:  0.31 kB
+dist/assets/index-CRazWPdq.css    7.01 kB │ gzip:  2.19 kB
+dist/assets/index-Cfwuoxu5.js   147.19 kB │ gzip: 46.52 kB
+✓ built in 13.60s
+
+> birdwatch@0.0.0 deploy
+> gh-pages -d dist
+
+Published
