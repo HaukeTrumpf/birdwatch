@@ -49,7 +49,7 @@ const ImageUploader: React.FC = () => {
     loadImagesAndDescriptions();
   }, []);
 
-  const handleRegenerateDescription = async (image: ImageData) => {
+  const handleRegenerateDescription = async () => {
     // Da wir den API-Schlüssel nicht im Client-Code verwenden können, können wir hier einen manuellen Workflow auslösen
     alert('Die Neugenerierung der Beschreibung ist nicht direkt verfügbar.');
   };
@@ -59,10 +59,14 @@ const ImageUploader: React.FC = () => {
       <div className="grid grid-cols-3 gap-4">
         {imagesWithDescriptions.map((item, index) => (
           <div key={index} className="image-container">
-            <img src={item.url} alt={`Captured bird ${index}`} className="w-full h-auto rounded-lg shadow" />
+            <img
+              src={item.url}
+              alt={`Captured bird ${index}`}
+              className="w-full h-auto rounded-lg shadow"
+            />
             <p className="mt-2 text-gray-700 whitespace-pre-wrap">{item.description}</p>
             <button
-              onClick={() => handleRegenerateDescription(item)}
+              onClick={handleRegenerateDescription}
               className="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
             >
               Beschreibung neu generieren
