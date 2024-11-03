@@ -14,5 +14,4 @@ git commit -m "Add new images - $(date)"
 git push https://HaukeTrumpf:${GITHUB_TOKEN}@github.com/HaukeTrumpf/birdwatch.git
 
 # Deploy the changes using npm
-npm install
 npm run deploy
