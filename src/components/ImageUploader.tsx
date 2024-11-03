@@ -47,7 +47,7 @@ const ImageUploader: React.FC = () => {
               alt={`Image ${index}`}
               className="w-full h-auto rounded-lg shadow"
               onError={() => {
-                console.error('Bild konnte nicht geladen werden:', item.url);
+                console.error('Image failed to load:', item.url);
               }}
             />
             <p className="mt-2 text-gray-700 whitespace-pre-wrap">{item.description}</p>
