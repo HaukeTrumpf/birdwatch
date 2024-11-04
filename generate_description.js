@@ -14,20 +14,13 @@ const openai = new OpenAI({
 async function generateDescriptions() {
   const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
-  const imagesDir = path.join(__dirname, 'public', 'images'); // Greift auf public/images zu
+  const imagesDir = path.join(__dirname, 'public', 'images'); // Greift jetzt auf public/images zu
   const publicDir = path.join(__dirname, 'public');
 
+  // Überprüfen, ob der Ordner "public" existiert, und erstellen ihn falls nicht
   if (!fs.existsSync(publicDir)) {
     fs.mkdirSync(publicDir);
   }
-
-  const descriptionsPath = path.join(publicDir, 'descriptions.json');
-  const imagesJsonPath = path.join(publicDir, 'images.json');
-
-  // Lade bereits vorhandene Beschreibungen, falls vorhanden
-  let descriptions = fs.existsSync(descriptionsPath)
-    ? JSON.parse(fs.readFileSync(descriptionsPath, 'utf8'))
-    : {};
 
   // Retrieve all image files
   const imageFiles = fs
@@ -37,7 +30,13 @@ async function generateDescriptions() {
   // Create image paths
   const imagePaths = imageFiles.map((file) => `images/${file}`);
 
-  // Generiere Beschreibungen für neue Bilder
+  let descriptions = {};
+  const descriptionsPath = path.join(publicDir, 'descriptions.json');
+
+  if (fs.existsSync(descriptionsPath)) {
+    descriptions = JSON.parse(fs.readFileSync(descriptionsPath, 'utf8'));
+  }
+
   for (const imageFile of imageFiles) {
     if (descriptions[imageFile]) {
       console.log(`Beschreibung für ${imageFile} existiert bereits. Überspringe...`);
@@ -73,9 +72,9 @@ async function generateDescriptions() {
     }
   }
 
-  // Speichere descriptions.json und images.json im public-Verzeichnis
+  // Save descriptions and image paths to JSON
   fs.writeFileSync(descriptionsPath, JSON.stringify(descriptions, null, 2));
-  fs.writeFileSync(imagesJsonPath, JSON.stringify(imagePaths, null, 2));
+  fs.writeFileSync(path.join(publicDir, 'images.json'), JSON.stringify(imagePaths, null, 2));
   console.log('JSON files updated.');
 }
 
