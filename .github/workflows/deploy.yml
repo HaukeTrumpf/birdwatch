@@ -29,28 +29,19 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Copy images to public directory
-        run: mkdir -p public/images && cp -R src/assets/images/* public/images/
-
-      - name: List files in src/assets/images (source directory)
-        run: ls -la src/assets/images
-
-      - name: List files in public/images (after copying)
-        run: ls -la public/images
-
       - name: Generate image descriptions
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: node generate_description.js
 
+      - name: Copy images to public and dist directories
+        run: |
+          mkdir -p public/images dist/images
+          cp -R src/assets/images/* public/images/
+          cp -R src/assets/images/* dist/images/
+
       - name: Build Vite project
         run: npm run build
-
-      - name: Copy images to dist directory after build
-        run: mkdir -p dist/images && cp -R public/images/* dist/images/
-
-      - name: List files in dist directory after build
-        run: ls -la dist/images
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

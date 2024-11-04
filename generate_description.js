@@ -1,4 +1,3 @@
-// generate_description.js
 import fs from 'fs';
 import path from 'path';
 import OpenAI from 'openai';
@@ -15,19 +14,18 @@ const openai = new OpenAI({
 async function generateDescriptions() {
   const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
-  const imagesDir = path.join(__dirname, 'public', 'images');
+  const imagesDir = path.join(__dirname, 'src', 'assets', 'images');
   const publicDir = path.join(__dirname, 'public');
 
-  // Alle Bilddateien im Verzeichnis abrufen
+  // Retrieve all image files
   const imageFiles = fs
     .readdirSync(imagesDir)
     .filter((file) => /\.(jpg|jpeg|png)$/i.test(file));
 
-  // Bildpfade erstellen
+  // Create image paths
   const imagePaths = imageFiles.map((file) => `images/${file}`);
 
   let descriptions = {};
-
   const descriptionsPath = path.join(publicDir, 'descriptions.json');
 
   if (fs.existsSync(descriptionsPath)) {
@@ -43,27 +41,14 @@ async function generateDescriptions() {
     const imageUrl = `https://hauketrumpf.github.io/birdwatch/images/${imageFile}`;
 
     try {
-
       const response = await openai.chat.completions.create({
         model: "gpt-4o-mini",
         messages: [
-          {
-            role: "user",
-            content: [
-              { type: "text", text: "welches tier siehst du, art, gattung usw" },
-              {
-                type: "image_url",
-                image_url: {
-                  "url": imageUrl,
-                },
-              },
-            ],
-          },
+          { role: "user", content: `Describe the animal in this image: ${imageUrl}` },
         ],
       });
 
       const description = response.choices[0].message.content.trim();
-
       descriptions[imageFile] = description;
       console.log(`Beschreibung für ${imageFile} gespeichert.`);
     } catch (error) {
@@ -71,13 +56,10 @@ async function generateDescriptions() {
     }
   }
 
+  // Save descriptions and image paths to JSON
   fs.writeFileSync(descriptionsPath, JSON.stringify(descriptions, null, 2));
-  console.log('descriptions.json erstellt.');
-
-  // images.json im public-Verzeichnis speichern
-  const imagesJsonPath = path.join(publicDir, 'images.json');
-  fs.writeFileSync(imagesJsonPath, JSON.stringify(imagePaths, null, 2));
-  console.log('images.json erstellt.');
+  fs.writeFileSync(path.join(publicDir, 'images.json'), JSON.stringify(imagePaths, null, 2));
+  console.log('JSON files updated.');
 }
 
 generateDescriptions();
