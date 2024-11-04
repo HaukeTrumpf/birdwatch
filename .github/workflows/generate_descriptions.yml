@@ -33,6 +33,9 @@ jobs:
       - name: Copy images to public/images
         run: cp -R src/assets/images/* public/images/
 
+      - name: Verify images copied to public/images
+        run: ls public/images
+
       - name: Generate image descriptions
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -44,7 +47,6 @@ jobs:
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "GitHub Actions"
-          # Add files only if they exist
           if [ -f public/descriptions.json ]; then git add public/descriptions.json; fi
           if [ -f public/images.json ]; then git add public/images.json; fi
           git commit -m "Update image descriptions" || echo "No changes to commit"

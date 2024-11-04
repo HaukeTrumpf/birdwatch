@@ -23,11 +23,12 @@ async function generateDescriptions() {
   const descriptionsPath = path.join(publicDir, 'descriptions.json');
   const imagesJsonPath = path.join(publicDir, 'images.json');
 
+  // Load or create descriptions
   let descriptions = fs.existsSync(descriptionsPath)
     ? JSON.parse(fs.readFileSync(descriptionsPath, 'utf8'))
     : {};
 
-  // Always refresh the list of images in public/images
+  // Refresh the list of images in public/images
   const imageFiles = fs
     .readdirSync(imagesDir)
     .filter((file) => /\.(jpg|jpeg|png)$/i.test(file));
@@ -49,13 +50,10 @@ async function generateDescriptions() {
 
     try {
       const response = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
+        model: "gpt-3.5-turbo", // Adjust to "gpt-4" if using GPT-4 API access
         messages: [
-          { role: "user", content: `
-            gebe mir den namen des tieres und die gattung in folgendem format "Name, Gattung, Lebensraum" ${imageUrl}
-            ` }
+          { role: "user", content: `Beschreibe das Bild mit dem Tier: ${imageUrl}` }
         ],
-        max_tokens: 50,
       });
 
       const description = response.choices[0].message.content.trim();
