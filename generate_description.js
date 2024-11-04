@@ -26,22 +26,22 @@ async function generateDescriptions() {
   const descriptionsPath = path.join(publicDir, 'descriptions.json');
   const imagesJsonPath = path.join(publicDir, 'images.json');
 
-  // Initialize or load existing descriptions
+  // Initialize descriptions from existing file or as an empty object
   let descriptions = fs.existsSync(descriptionsPath)
     ? JSON.parse(fs.readFileSync(descriptionsPath, 'utf8'))
     : {};
 
-  // Get all current image files in public/images
+  // Get current images in public/images
   const imageFiles = fs
     .readdirSync(imagesDir)
     .filter((file) => /\.(jpg|jpeg|png)$/i.test(file));
 
-  // Update images.json with only existing image files
+  // Force-update images.json with current images only
   const imagePaths = imageFiles.map((file) => `images/${file}`);
   fs.writeFileSync(imagesJsonPath, JSON.stringify(imagePaths, null, 2));
   console.log('images.json updated to reflect current images only.');
 
-  // Remove descriptions of deleted images
+  // Remove descriptions for deleted images
   const updatedDescriptions = {};
   for (const file of imageFiles) {
     if (descriptions[file]) {
@@ -52,9 +52,9 @@ async function generateDescriptions() {
   fs.writeFileSync(descriptionsPath, JSON.stringify(descriptions, null, 2));
   console.log('descriptions.json updated to remove descriptions of deleted images.');
 
-  // Add a delay to ensure the images are published
+  // Add a longer delay to ensure URLs are accessible
   console.log("Waiting for images to be accessible online...");
-  await delay(10000);  // 10-second delay
+  await delay(15000);  // 15-second delay
 
   let hasNewDescriptions = false;
 
@@ -68,7 +68,7 @@ async function generateDescriptions() {
 
     try {
       const response = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
+        model: "gpt-3.5-turbo",
         messages: [
           { role: "user", content: `Please describe the animal in the image: ${imageUrl}` }
         ],
