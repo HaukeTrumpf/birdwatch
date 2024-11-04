@@ -67,7 +67,7 @@ async function generateDescriptions() {
           {
             role: "user",
             content: [
-              { type: "text", text: "welches tier siehst du, art, gattung usw" },
+              { type: "text", text: "einfach nur der name des tieres und die gattung, mehr nicht ohne punkt beenden" },
               {
                 type: "image_url",
                 image_url: {
