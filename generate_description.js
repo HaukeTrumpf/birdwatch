@@ -14,7 +14,7 @@ const openai = new OpenAI({
 async function generateDescriptions() {
   const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
-  const imagesDir = path.join(__dirname, 'src', 'assets', 'images');
+  const imagesDir = path.join(__dirname, 'public', 'images'); // Greift jetzt auf public/images zu
   const publicDir = path.join(__dirname, 'public');
 
   // Überprüfen, ob der Ordner "public" existiert, und erstellen ihn falls nicht
