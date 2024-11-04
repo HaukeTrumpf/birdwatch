@@ -1,0 +1,36 @@
+name: Generate Image Descriptions
+
+on:
+  workflow_run:
+    workflows: ["Deploy Vite React App to GitHub Pages"]
+    types:
+      - completed
+
+jobs:
+  generate_descriptions:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Generate image descriptions
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: node generate_description.js
+
+      - name: Commit and push descriptions
+        run: |
+          git config --global user.email "you@example.com"
+          git config --global user.name "GitHub Actions"
+          git add public/descriptions.json public/images.json
+          git commit -m "Update image descriptions"
+          git push
