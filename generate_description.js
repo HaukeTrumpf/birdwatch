@@ -49,9 +49,11 @@ async function generateDescriptions() {
 
     try {
       const response = await openai.chat.completions.create({
-        model: "gpt-4",
+        model: "gpt-4o-mini",
         messages: [
-          { role: "user", content: `Beschreibe das Bild mit dem Tier: ${imageUrl}` }
+          { role: "user", content: `
+            gebe mir den namen des tieres und die gattung in folgendem format "Name, Gattung, Lebensraum" ${imageUrl}
+            ` }
         ],
         max_tokens: 50,
       });
