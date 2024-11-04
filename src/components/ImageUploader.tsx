@@ -9,7 +9,7 @@ interface ImageData {
 const ImageUploader: React.FC = () => {
   const [images, setImages] = useState<ImageData[]>([]);
 
-  useEffect(() => {
+  useEffect(() => { 
     const loadImagesAndDescriptions = async () => {
       try {
         const baseUrl = import.meta.env.BASE_URL;
