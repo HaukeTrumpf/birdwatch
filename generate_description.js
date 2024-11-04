@@ -23,12 +23,12 @@ async function generateDescriptions() {
   const descriptionsPath = path.join(publicDir, 'descriptions.json');
   const imagesJsonPath = path.join(publicDir, 'images.json');
 
-  // Load or create descriptions
+  // Ensure descriptions.json is loaded or created
   let descriptions = fs.existsSync(descriptionsPath)
     ? JSON.parse(fs.readFileSync(descriptionsPath, 'utf8'))
     : {};
 
-  // Refresh the list of images in public/images
+  // Retrieve all image files in public/images
   const imageFiles = fs
     .readdirSync(imagesDir)
     .filter((file) => /\.(jpg|jpeg|png)$/i.test(file));
@@ -36,7 +36,7 @@ async function generateDescriptions() {
   // Update images.json with the complete list of images
   const imagePaths = imageFiles.map((file) => `images/${file}`);
   fs.writeFileSync(imagesJsonPath, JSON.stringify(imagePaths, null, 2));
-  console.log('images.json aktualisiert.');
+  console.log('images.json updated with all images.');
 
   let hasNewDescriptions = false;
 
@@ -50,9 +50,9 @@ async function generateDescriptions() {
 
     try {
       const response = await openai.chat.completions.create({
-        model: "gpt-3.5-turbo", // Adjust to "gpt-4" if using GPT-4 API access
+        model: "gpt-3.5-turbo", // or "gpt-4" if you have access
         messages: [
-          { role: "user", content: `Beschreibe das Bild mit dem Tier: ${imageUrl}` }
+          { role: "user", content: `Please describe the animal in the image: ${imageUrl}` }
         ],
       });
 
@@ -65,9 +65,10 @@ async function generateDescriptions() {
     }
   }
 
+  // Update descriptions.json if there were new descriptions added
   if (hasNewDescriptions) {
     fs.writeFileSync(descriptionsPath, JSON.stringify(descriptions, null, 2));
-    console.log('descriptions.json aktualisiert.');
+    console.log('descriptions.json updated with new descriptions.');
   }
 }
 
