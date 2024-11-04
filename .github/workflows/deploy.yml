@@ -38,16 +38,10 @@ jobs:
       - name: Build Vite project
         run: npm run build
 
-      - name: Upload artifact for deployment
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
-
-      - name: Save public folder as artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: public-folder
-          path: public
 
   deploy:
     environment:

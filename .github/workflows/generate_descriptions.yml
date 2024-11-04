@@ -22,11 +22,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Download public folder artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: public-folder
-          path: public
+      - name: Ensure public/images directory exists
+        run: mkdir -p public/images
+
+      - name: Copy images to public/images
+        run: cp -R src/assets/images/* public/images/
 
       - name: Generate image descriptions
         env:
