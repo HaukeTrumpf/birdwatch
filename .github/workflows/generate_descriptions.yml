@@ -22,6 +22,12 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Download public folder artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: public-folder
+          path: public
+
       - name: Generate image descriptions
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
