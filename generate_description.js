@@ -49,9 +49,21 @@ async function generateDescriptions() {
 
     try {
       const response = await openai.chat.completions.create({
-        model: "gpt-4",
-        prompt: `Beschreibe das Bild mit dem Tier: ${imageUrl}`,
-        max_tokens: 50,
+        model: "gpt-4o-mini",
+        messages: [
+          {
+            role: "user",
+            content: [
+              { type: "text", text: "einfach nur der name des tieres und die gattung, mehr nicht ohne punkt beenden" },
+              {
+                type: "image_url",
+                image_url: {
+                  "url": imageUrl,
+                },
+              },
+            ],
+          },
+        ],
       });
 
       const description = response.choices[0].text.trim();
