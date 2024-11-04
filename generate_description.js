@@ -36,10 +36,10 @@ async function generateDescriptions() {
     .readdirSync(imagesDir)
     .filter((file) => /\.(jpg|jpeg|png)$/i.test(file));
 
-  // Force-update images.json with current images only
+  // Update images.json with the complete list of current images
   const imagePaths = imageFiles.map((file) => `images/${file}`);
   fs.writeFileSync(imagesJsonPath, JSON.stringify(imagePaths, null, 2));
-  console.log('images.json updated to reflect current images only.');
+  console.log('images.json updated with current images.');
 
   // Remove descriptions for deleted images
   const updatedDescriptions = {};
@@ -50,9 +50,9 @@ async function generateDescriptions() {
   }
   descriptions = updatedDescriptions;
   fs.writeFileSync(descriptionsPath, JSON.stringify(descriptions, null, 2));
-  console.log('descriptions.json updated to remove descriptions of deleted images.');
+  console.log('descriptions.json updated to remove descriptions for deleted images.');
 
-  // Add a longer delay to ensure URLs are accessible
+  // Wait for GitHub Pages to publish new images
   console.log("Waiting for images to be accessible online...");
   await delay(15000);  // 15-second delay
 
@@ -83,11 +83,20 @@ async function generateDescriptions() {
     }
   }
 
-  // Save descriptions only if new ones were added
+  // Save descriptions if new ones were added
   if (hasNewDescriptions) {
     fs.writeFileSync(descriptionsPath, JSON.stringify(descriptions, null, 2));
     console.log('descriptions.json updated with new descriptions.');
   }
+
+  // Final synchronization check to ensure all images in images.json have a description
+  for (const file of imageFiles) {
+    if (!descriptions[file]) {
+      descriptions[file] = "Keine Beschreibung verfügbar.";
+    }
+  }
+  fs.writeFileSync(descriptionsPath, JSON.stringify(descriptions, null, 2));
+  console.log('descriptions.json synchronized with all images.');
 }
 
 generateDescriptions();
