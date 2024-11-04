@@ -65,6 +65,7 @@ async function generateDescriptions() {
     }
 
     const imageUrl = `https://hauketrumpf.github.io/birdwatch/images/${imageFile}`;
+    console.log(`Processing image: ${imageUrl}`);
 
     // Retry mechanism for unreliable image loading
     let retries = 3;
@@ -78,9 +79,9 @@ async function generateDescriptions() {
         });
 
         const description = response.choices[0].message.content.trim();
+        console.log(`Received description for ${imageFile}: ${description}`);
         descriptions[imageFile] = description;
         hasNewDescriptions = true;
-        console.log(`Description for ${imageFile} saved.`);
         break;  // Success, exit the retry loop
       } catch (error) {
         retries--;
