@@ -35,11 +35,6 @@ jobs:
           cp -R src/assets/images/* public/images/
           cp -R src/assets/images/* dist/images/
 
-      - name: Generate image descriptions
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: node generate_description.js
-
       - name: Build Vite project
         run: npm run build
 
