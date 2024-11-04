@@ -52,9 +52,9 @@ async function generateDescriptions() {
   fs.writeFileSync(descriptionsPath, JSON.stringify(descriptions, null, 2));
   console.log('descriptions.json updated to remove descriptions for deleted images.');
 
-  // Wait for GitHub Pages to publish new images
+  // Longer delay to ensure URLs are accessible
   console.log("Waiting for images to be accessible online...");
-  await delay(15000);  // 15-second delay
+  await delay(20000);  // 20-second delay
 
   let hasNewDescriptions = false;
 
@@ -66,20 +66,32 @@ async function generateDescriptions() {
 
     const imageUrl = `https://hauketrumpf.github.io/birdwatch/images/${imageFile}`;
 
-    try {
-      const response = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
-        messages: [
-          { role: "user", content: `bitte nenne name und gattung des tieres wie folgt "name", "gattung": ${imageUrl}` }
-        ],
-      });
+    // Retry mechanism for unreliable image loading
+    let retries = 3;
+    while (retries > 0) {
+      try {
+        const response = await openai.chat.completions.create({
+          model: "gpt-4o-mini",
+          messages: [
+            { role: "user", content: `Please provide the name and species in the following format "name", "species": ${imageUrl}` }
+          ],
+        });
 
-      const description = response.choices[0].message.content.trim();
-      descriptions[imageFile] = description;
-      hasNewDescriptions = true;
-      console.log(`Description for ${imageFile} saved.`);
-    } catch (error) {
-      console.error(`Error with ${imageFile}:`, error.response?.data || error.message);
+        const description = response.choices[0].message.content.trim();
+        descriptions[imageFile] = description;
+        hasNewDescriptions = true;
+        console.log(`Description for ${imageFile} saved.`);
+        break;  // Success, exit the retry loop
+      } catch (error) {
+        retries--;
+        console.error(`Error with ${imageFile}, ${retries} retries left:`, error.response?.data || error.message);
+        if (retries > 0) await delay(5000);  // Retry delay
+      }
+    }
+
+    // Fallback if all retries fail
+    if (!descriptions[imageFile]) {
+      descriptions[imageFile] = "Keine Beschreibung verfügbar.";
     }
   }
 
@@ -88,15 +100,6 @@ async function generateDescriptions() {
     fs.writeFileSync(descriptionsPath, JSON.stringify(descriptions, null, 2));
     console.log('descriptions.json updated with new descriptions.');
   }
-
-  // Final synchronization check to ensure all images in images.json have a description
-  for (const file of imageFiles) {
-    if (!descriptions[file]) {
-      descriptions[file] = "Keine Beschreibung verfügbar.";
-    }
-  }
-  fs.writeFileSync(descriptionsPath, JSON.stringify(descriptions, null, 2));
-  console.log('descriptions.json synchronized with all images.');
 }
 
 generateDescriptions();
