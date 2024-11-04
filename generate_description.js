@@ -13,29 +13,31 @@ const openai = new OpenAI({
 
 async function generateDescriptions() {
   const __dirname = path.dirname(new URL(import.meta.url).pathname);
-
-  const imagesDir = path.join(__dirname, 'public', 'images'); // Greift jetzt auf public/images zu
+  const imagesDir = path.join(__dirname, 'public', 'images'); // Greift auf public/images zu
   const publicDir = path.join(__dirname, 'public');
 
-  // Überprüfen, ob der Ordner "public" existiert, und erstellen ihn falls nicht
+  // Ensure public directory exists
   if (!fs.existsSync(publicDir)) {
     fs.mkdirSync(publicDir);
   }
 
-  // Retrieve all image files
+  const descriptionsPath = path.join(publicDir, 'descriptions.json');
+  const imagesJsonPath = path.join(publicDir, 'images.json');
+
+  // Load existing descriptions if they exist
+  let descriptions = fs.existsSync(descriptionsPath)
+    ? JSON.parse(fs.readFileSync(descriptionsPath, 'utf8'))
+    : {};
+
+  // Retrieve all image files in public/images
   const imageFiles = fs
     .readdirSync(imagesDir)
     .filter((file) => /\.(jpg|jpeg|png)$/i.test(file));
 
-  // Create image paths
+  // Create image paths for images.json
   const imagePaths = imageFiles.map((file) => `images/${file}`);
 
-  let descriptions = {};
-  const descriptionsPath = path.join(publicDir, 'descriptions.json');
-
-  if (fs.existsSync(descriptionsPath)) {
-    descriptions = JSON.parse(fs.readFileSync(descriptionsPath, 'utf8'));
-  }
+  let hasNewDescriptions = false; // Track if we added new descriptions
 
   for (const imageFile of imageFiles) {
     if (descriptions[imageFile]) {
@@ -49,33 +51,28 @@ async function generateDescriptions() {
       const response = await openai.chat.completions.create({
         model: "gpt-4o-mini",
         messages: [
-          {
-            role: "user",
-            content: [
-              { type: "text", text: "welches tier siehst du, art, gattung usw" },
-              {
-                type: "image_url",
-                image_url: {
-                  "url": imageUrl,
-                },
-              },
-            ],
-          },
+          { role: "user", content: `Beschreibe das Bild mit dem Tier: ${imageUrl}` },
         ],
       });
 
       const description = response.choices[0].message.content.trim();
       descriptions[imageFile] = description;
+      hasNewDescriptions = true;
       console.log(`Beschreibung für ${imageFile} gespeichert.`);
     } catch (error) {
       console.error(`Fehler bei ${imageFile}:`, error.response?.data || error.message);
     }
   }
 
-  // Save descriptions and image paths to JSON
-  fs.writeFileSync(descriptionsPath, JSON.stringify(descriptions, null, 2));
-  fs.writeFileSync(path.join(publicDir, 'images.json'), JSON.stringify(imagePaths, null, 2));
-  console.log('JSON files updated.');
+  // Save descriptions.json only if new descriptions were added
+  if (hasNewDescriptions) {
+    fs.writeFileSync(descriptionsPath, JSON.stringify(descriptions, null, 2));
+    console.log('descriptions.json aktualisiert.');
+  }
+
+  // Update images.json regardless, in case new images were added
+  fs.writeFileSync(imagesJsonPath, JSON.stringify(imagePaths, null, 2));
+  console.log('images.json aktualisiert.');
 }
 
 generateDescriptions();
