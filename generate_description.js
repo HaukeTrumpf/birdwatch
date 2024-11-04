@@ -17,6 +17,11 @@ async function generateDescriptions() {
   const imagesDir = path.join(__dirname, 'src', 'assets', 'images');
   const publicDir = path.join(__dirname, 'public');
 
+  // Überprüfen, ob der Ordner "public" existiert, und erstellen ihn falls nicht
+  if (!fs.existsSync(publicDir)) {
+    fs.mkdirSync(publicDir);
+  }
+
   // Retrieve all image files
   const imageFiles = fs
     .readdirSync(imagesDir)
