@@ -51,7 +51,18 @@ async function generateDescriptions() {
       const response = await openai.chat.completions.create({
         model: "gpt-4o-mini",
         messages: [
-          { role: "user", content: `Beschreibe das Bild mit dem Tier: ${imageUrl}` },
+          {
+            role: "user",
+            content: [
+              { type: "text", text: "ganz kurz: welches tier siehst du. nur der name bitte" },
+              {
+                type: "image_url",
+                image_url: {
+                  "url": imageUrl,
+                },
+              },
+            ],
+          },
         ],
       });
 
