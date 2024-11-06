@@ -1,31 +1,59 @@
-// src/components/ImageUploader.tsx
 import React, { useEffect, useState } from 'react';
 
+interface ImageData {
+  url: string;
+  description: string;
+  filename: string;
+}
+
 const ImageUploader: React.FC = () => {
-  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+  const [images, setImages] = useState<ImageData[]>([]);
 
   useEffect(() => {
-    // Import all images from src/assets using Vite's import.meta.glob
-    const importAllImages = () => {
-      const images = import.meta.glob('../assets/*.{jpg,jpeg,png}', { eager: true });
-      const imageUrls = Object.values(images).map((module: any) => module.default);
+    const loadImagesAndDescriptions = async () => {
+      try {
+        const baseUrl = import.meta.env.BASE_URL;
 
-      setUploadedImages(imageUrls);
+        // Load descriptions.json
+        const descriptionsResponse = await fetch(`${baseUrl}descriptions.json`);
+        const descriptionsData = await descriptionsResponse.json();
+
+        // Load images.json
+        const imagesResponse = await fetch(`${baseUrl}images.json`);
+        const imageFilenames: string[] = await imagesResponse.json();
+
+        const imagesData: ImageData[] = imageFilenames.map((filename) => ({
+          url: `${baseUrl}${filename}`,
+          description: descriptionsData[filename.split('/').pop() || ''] || 'Keine Beschreibung verfügbar.',
+          filename,
+        }));
+
+        setImages(imagesData);
+      } catch (error) {
+        console.error('Fehler beim Laden der Bilder oder Beschreibungen:', error);
+      }
     };
 
-    importAllImages();
+    loadImagesAndDescriptions();
   }, []);
 
   return (
-    <div className="container mx-auto p-4">
-      <div className="grid grid-cols-3 gap-4">
-        {uploadedImages.map((url, index) => (
-          <img
-            key={index}
-            src={url}
-            alt={`Captured bird ${index}`}
-            className="w-full h-auto rounded-lg shadow"
-          />
+    <div className="container mx-auto p-2 md:p-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {images.map((item, index) => (
+          <div key={index} className="image-container">
+            <img
+              src={item.url}
+              alt={`Image ${index}`}
+              className="w-full h-auto rounded-lg shadow"
+              onError={() => {
+                console.error('Image failed to load:', item.url);
+              }}
+            />
+            <p className="mt-2 text-white text-sm md:text-base whitespace-pre-wrap">
+              {item.description}
+            </p>
+          </div>
         ))}
       </div>
     </div>

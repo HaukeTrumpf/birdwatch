@@ -1,0 +1,53 @@
+name: Generate Image Descriptions
+
+on:
+  workflow_run:
+    workflows: ["Deploy Vite React App to GitHub Pages"]
+    types:
+      - completed
+
+permissions:
+  contents: write  # Allow push access
+
+jobs:
+  generate_descriptions:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false  # Ensure fresh token generation
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Ensure public/images directory exists
+        run: mkdir -p public/images
+
+      - name: Copy images to public/images
+        run: cp -R src/assets/images/* public/images/
+
+      - name: Verify images copied to public/images
+        run: ls public/images
+
+      - name: Generate image descriptions
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: node generate_description.js
+
+      - name: Commit and push descriptions
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}  # Use GitHub token for push
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "GitHub Actions"
+          if [ -f public/descriptions.json ]; then git add public/descriptions.json; fi
+          if [ -f public/images.json ]; then git add public/images.json; fi
+          git commit -m "Update image descriptions" || echo "No changes to commit"
+          git push "https://x-access-token:${{ secrets.REPO_TOKEN }}@github.com/HaukeTrumpf/birdwatch.git" HEAD:main

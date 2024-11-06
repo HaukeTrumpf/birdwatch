@@ -9,11 +9,13 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+    "generate-descriptions": "node generate-descriptions.js"
   },
   "dependencies": {
     "axios": "^1.7.7",
     "dotenv": "^16.4.5",
+    "openai": "^4.70.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
