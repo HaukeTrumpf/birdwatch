@@ -1,0 +1,5 @@
+20241108_173057 - Motion detected, captured image: /home/hauke.trumpf/birdwatch/src/assets/images/motion_20241108_173057.jpg
+20241108_173101 - Motion detected, captured image: /home/hauke.trumpf/birdwatch/src/assets/images/motion_20241108_173101.jpg
+20241108_173104 - Motion detected, captured image: /home/hauke.trumpf/birdwatch/src/assets/images/motion_20241108_173104.jpg
+20241108_173110 - Motion detected, captured image: /home/hauke.trumpf/birdwatch/src/assets/images/motion_20241108_173110.jpg
+20241108_173114 - Motion detected, captured image: /home/hauke.trumpf/birdwatch/src/assets/images/motion_20241108_173114.jpg
