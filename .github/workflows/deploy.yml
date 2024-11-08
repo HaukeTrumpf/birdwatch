@@ -29,13 +29,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Check if images exist and copy to public and dist directories
+      - name: Copy images to public and dist directories
         run: |
           mkdir -p public/images dist/images
-          if [ -n "$(ls -A src/assets/images 2>/dev/null)" ]; then
-            cp -R src/assets/images/* public/images/
-            cp -R src/assets/images/* dist/images/
-          fi
+          cp -R src/assets/images/* public/images/
+          cp -R src/assets/images/* dist/images/
 
       - name: Build Vite project
         run: npm run build
