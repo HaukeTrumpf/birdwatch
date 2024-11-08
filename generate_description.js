@@ -26,15 +26,23 @@ async function generateDescriptions() {
   const descriptionsPath = path.join(publicDir, 'descriptions.json');
   const imagesJsonPath = path.join(publicDir, 'images.json');
 
-  // Initialize descriptions from existing file or as an empty object
-  let descriptions = fs.existsSync(descriptionsPath)
-    ? JSON.parse(fs.readFileSync(descriptionsPath, 'utf8'))
-    : {};
-
   // Get current images in public/images
   const imageFiles = fs
     .readdirSync(imagesDir)
     .filter((file) => /\.(jpg|jpeg|png)$/i.test(file));
+
+  // If no images exist, delete JSON files and exit
+  if (imageFiles.length === 0) {
+    if (fs.existsSync(descriptionsPath)) fs.unlinkSync(descriptionsPath);
+    if (fs.existsSync(imagesJsonPath)) fs.unlinkSync(imagesJsonPath);
+    console.log('No images found. descriptions.json and images.json deleted.');
+    return; // Exit the function
+  }
+
+  // Initialize descriptions from existing file or as an empty object
+  let descriptions = fs.existsSync(descriptionsPath)
+    ? JSON.parse(fs.readFileSync(descriptionsPath, 'utf8'))
+    : {};
 
   // Update images.json with the complete list of current images
   const imagePaths = imageFiles.map((file) => `images/${file}`);
