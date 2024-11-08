@@ -30,18 +30,27 @@ jobs:
       - name: Ensure public/images directory exists
         run: mkdir -p public/images
 
-      - name: Copy images to public/images
-        run: cp -R src/assets/images/* public/images/
+      - name: Copy images to public/images if any exist
+        run: |
+          if [ -n "$(ls -A src/assets/images 2>/dev/null)" ]; then
+            cp -R src/assets/images/* public/images/
+          fi
 
       - name: Verify images copied to public/images
-        run: ls public/images
+        run: |
+          if [ -n "$(ls -A public/images 2>/dev/null)" ]; then
+            ls public/images
+          else
+            echo "No images found to generate descriptions for."
+          fi
 
-      - name: Generate image descriptions
+      - name: Generate image descriptions if images exist
+        if: ${{ always() && steps.verify_images.outputs.has_images == 'true' }}
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: node generate_description.js
 
-      - name: Commit and push descriptions
+      - name: Commit and push descriptions if descriptions were generated
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}  # Use GitHub token for push
         run: |
